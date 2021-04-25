@@ -8,7 +8,7 @@ public class ChargedAttack : MonoBehaviour
     {
         if (charged)
         {
-            if (collision.tag == "Player") Debug.Log("player damaged");
+            if (collision.CompareTag("Player")) Debug.Log("player damaged");
 
             Destroy(gameObject);
         }
