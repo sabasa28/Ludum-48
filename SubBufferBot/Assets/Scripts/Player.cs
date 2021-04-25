@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -11,17 +11,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     float speedX = 0.0f;
 
-    [SerializeField]
-    ProyectileManager proyManager;
+    bool coolingDown;
     int lastShotPower;
-    bool isShotInCD;
     [SerializeField]
-    float shootingCD;
+    float projectileSpeed = 2.0f;
     [SerializeField]
-    float charginSpeed;
+    float shootingCD = 1.0f;
+    [SerializeField]
+    float chargingSpeed = 1.0f;
 
-    bool lookingRight;//right==true  left==false
-    bool lookingUp;//up==true  down==false     en verdad no es up, sino mirando hacia adelante
+    bool lookingRight; //right==true  left==false
+    bool lookingUp; //up==true  down==false     en verdad no es up, sino mirando hacia adelante
+
+    public static event Action<float, float, Vector2, Vector2> OnShoot;
 
     void Awake()
     {
@@ -29,7 +31,7 @@ public class Player : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    private void Start()
+    void Start()
     {
         lookingRight = true;
         lookingUp = true;
@@ -38,12 +40,14 @@ public class Player : MonoBehaviour
     void Update()
     {
         movement.x = (Input.GetAxis("Horizontal")) * speedX;
+
         if (Input.GetAxisRaw("Vertical") >= 0) lookingUp = true;
         else lookingUp = false;
-        if (Input.GetButtonDown("Fire") && !isShotInCD) StartCoroutine(LoadShot());
+
+        if (Input.GetButtonDown("Fire") && !coolingDown) StartCoroutine(LoadShot());
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         FlipIfNeeded();
         rb.velocity = movement * Time.fixedDeltaTime;
@@ -68,40 +72,45 @@ public class Player : MonoBehaviour
             }
         }
     }
-    IEnumerator LoadShot()
-    {
-        isShotInCD = true;
-        float load = 0.0f;
-        while (!Input.GetButtonUp("Fire"))
-        {
-            load += Time.deltaTime * charginSpeed;
-            yield return null;
-        }
-        if (load > 3.0f) load = 3.0f;
-        lastShotPower = (int)load;
-        Shoot();
-    }
 
     void Shoot()
     {
         float dirX;
         float dirY;
+
         if (lookingUp) dirY = 0.0f;
         else dirY = -1.0f;
-        if (dirY == -1.0f && movement.x == 0.0f)
-            dirX = 0.0f;
+
+        if (dirY == -1.0f && movement.x == 0.0f) dirX = 0.0f;
         else if (lookingRight) dirX = 1.0f;
         else dirX = -1.0f;
-        Vector3 shotDirection = new Vector3(dirX, dirY, 0).normalized;
-        Debug.Log(movement);
-        Debug.Log(shotDirection);
-        proyManager.ReleaseProyectile(lastShotPower, shotDirection);
-        StartCoroutine(CountCooldown());
+
+        Vector2 shotDirection = new Vector2(dirX, dirY).normalized;
+        OnShoot?.Invoke(lastShotPower + 1.0f, projectileSpeed, transform.position, shotDirection);
+
+        StartCoroutine(CountCoolDown());
     }
 
-    IEnumerator CountCooldown()
+    IEnumerator LoadShot()
+    {
+        coolingDown = true;
+        float load = 0.0f;
+
+        while (!Input.GetButtonUp("Fire"))
+        {
+            load += Time.deltaTime * chargingSpeed;
+            yield return null;
+        }
+
+        if (load > 3.0f) load = 3.0f;
+        lastShotPower = (int)load;
+
+        Shoot();
+    }
+
+    IEnumerator CountCoolDown()
     {
         yield return new WaitForSeconds(shootingCD);
-        isShotInCD = false;
+        coolingDown = false;
     }
 }
