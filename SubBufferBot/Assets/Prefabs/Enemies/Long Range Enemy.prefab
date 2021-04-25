@@ -147,4 +147,4 @@ MonoBehaviour:
   range: 7.5
   attackCoolDown: 2
   playerTransform: {fileID: 0}
-  projectileSpeed: 300
+  projectileSpeed: 6.5

@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Wall")) ReturnToPool();
+        if (collision.CompareTag("Wall") || collision.CompareTag("Floor")) ReturnToPool();
     }
 
     protected void ReturnToPool()
@@ -29,6 +29,6 @@ public class Projectile : MonoBehaviour
     public virtual void Fire(float speed, Vector2 direction)
     {
         transform.parent = null;
-        rb.velocity = direction * speed * Time.fixedDeltaTime;
+        rb.velocity = direction * speed;
     }
 }
