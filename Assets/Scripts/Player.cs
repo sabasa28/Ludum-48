@@ -207,6 +207,7 @@ public class Player : MonoBehaviour
                     {
                         rb.velocity = Vector2.zero;
                         SoundJump(-transform.up);
+                        collision.GetComponent<Enemy>().Squished(lastShotCharge);
                         if (lastShotCharge > 0) lastShotCharge--;
                     }
                 }

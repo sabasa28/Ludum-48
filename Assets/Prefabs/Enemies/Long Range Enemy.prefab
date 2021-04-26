@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1679266235365659473}
   - component: {fileID: 1679266235365659475}
   - component: {fileID: 1679266235365659472}
+  - component: {fileID: -8014390039078063188}
   m_Layer: 0
   m_Name: Long Range Enemy
   m_TagString: Enemy
@@ -150,6 +151,25 @@ MonoBehaviour:
   attackCoolDown: 2
   playerTransform: {fileID: 0}
   projectileSpeed: 5
+--- !u!95 &-8014390039078063188
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679266235365659479}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 53e8b4b21c3fb6940a401a52a1e8a3f5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3575186248389979056
 GameObject:
   m_ObjectHideFlags: 0

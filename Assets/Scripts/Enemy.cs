@@ -5,6 +5,10 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour
 {
     protected Rigidbody2D rb;
+    Animator anim;
+    SpriteRenderer sr;
+    protected BoxCollider2D mainColl;
+    [SerializeField] protected BoxCollider2D raycastReceiver;
 
     protected bool attackReady = true;
 
@@ -13,6 +17,9 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float movementSpeed = 1.0f;
     float positionY = -1.61f;
     bool grounded = false;
+
+    bool animatingDeath = false;
+    [SerializeField] float minDistToPlayerToFlip = 0.0f;
 
     [Header("Attack: ")]
     [SerializeField] protected float range = 5.0f;
@@ -25,6 +32,9 @@ public abstract class Enemy : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
+        mainColl = GetComponent<BoxCollider2D>();
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
@@ -46,9 +56,16 @@ public abstract class Enemy : MonoBehaviour
 
     protected void MoveTowardsPlayer()
     {
+        if (animatingDeath) return;
         Vector2 position = transform.position;
-        position += GetPlayerDirection() * movementSpeed * Time.deltaTime;
+        Vector2 playerDir = GetPlayerDirection();
+        position += playerDir * movementSpeed * Time.deltaTime;
         transform.position = position;
+        if (Mathf.Abs(transform.position.x - playerTransform.position.x) > minDistToPlayerToFlip)
+        {
+            if (playerDir.x > 0 && sr.flipX) sr.flipX = false;
+            else if (playerDir.x < 0 && !sr.flipX) sr.flipX = true;
+        }
     }
 
     protected bool PlayerInRange()
@@ -61,6 +78,14 @@ public abstract class Enemy : MonoBehaviour
         return playerTransform.position.x > transform.position.x ? Vector2.right : -Vector2.right;
     }
 
+    protected void WaitForAnimation()
+    {
+        mainColl.enabled = false;
+        raycastReceiver.enabled = false;
+        animatingDeath = true;
+        anim.SetTrigger("Dead");
+    }
+
     protected void Die()
     {
         OnDeath?.Invoke(this);
@@ -68,7 +93,13 @@ public abstract class Enemy : MonoBehaviour
 
     public void TakeDamage(int attackCharge)
     {
-        if (attackCharge >= level) Die();
+        if (attackCharge >= level) WaitForAnimation();
+    }
+
+    public void Squished(int attackCharge)
+    {
+        TakeDamage(attackCharge);
+        anim.SetTrigger("Smashed");
     }
 
     protected IEnumerator CoolDown()
