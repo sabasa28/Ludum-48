@@ -5,11 +5,18 @@ public class StrongEnemy : Enemy
 {
     bool chargingAttack = false;
 
+    [Header("Charged attack: ")]
     [SerializeField] float attackChargeDuration = 1.0f;
+    float attackXOffset;
 
-    ChargedAttack attack = null;
-    SpriteRenderer attackSR = null;
-    [SerializeField] GameObject chargedAttackPrefab = null;
+    [Header("Charged attack components: ")]
+    [SerializeField] ChargedAttack attack;
+    [SerializeField] SpriteRenderer attackSR;
+
+    void Awake()
+    {
+        attackXOffset = Mathf.Abs(attack.transform.localPosition.x);
+    }
 
     void Update()
     {
@@ -21,9 +28,9 @@ public class StrongEnemy : Enemy
     protected override void Attack()
     {
         Vector2 attackPosition = transform.position;
-        attackPosition += GetPlayerDirection();
-        attack = Instantiate(chargedAttackPrefab, attackPosition, Quaternion.identity, transform).GetComponent<ChargedAttack>();
-        attackSR = attack.GetComponent<SpriteRenderer>();
+        attackPosition.x += attackXOffset * GetPlayerDirection().x;
+        attack.transform.position = attackPosition;
+        attack.gameObject.SetActive(true);
 
         StartCoroutine(ChargeAttack());
     }
@@ -47,12 +54,9 @@ public class StrongEnemy : Enemy
             yield return null;
         }
 
-        attack.charged = true;
-
         chargingAttack = false;
-        attack = null;
-        attackSR = null;
 
+        attack.OnCharged();
         StartCoroutine(CoolDown());
     }
 }

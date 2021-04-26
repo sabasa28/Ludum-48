@@ -2,30 +2,31 @@
 
 public class ProjectileManager : MonoBehaviour
 {
-    Projectile[] playerProjectiles;
-    Projectile[] enemyProjectiles;
+    PlayerProjectile[] playerProjectiles;
+    EnemyProjectile[] enemyProjectiles;
 
     [SerializeField] Transform playerProjectileContainer = null;
     [SerializeField] Transform enemyProjectileContainer = null;
 
     void Awake()
     {
-        playerProjectiles = playerProjectileContainer.GetComponentsInChildren<Projectile>(true);
-        enemyProjectiles = enemyProjectileContainer.GetComponentsInChildren<Projectile>(true);
+        playerProjectiles = playerProjectileContainer.GetComponentsInChildren<PlayerProjectile>(true);
+        enemyProjectiles = enemyProjectileContainer.GetComponentsInChildren<EnemyProjectile>(true);
 
         Player.OnShoot += ReleasePlayerProjectile;
         LongRangeEnemy.OnShoot += ReleaseEnemyProjectile;
     }
 
-    public void ReleasePlayerProjectile(float scaleMultiplier, float speed, Vector2 position, Vector2 direction)
+    public void ReleasePlayerProjectile(int charge, float speed, Vector2 position, Vector2 direction)
     {
-        foreach (Projectile projectile in playerProjectiles)
+        foreach (PlayerProjectile projectile in playerProjectiles)
         {
             if (!projectile.gameObject.activeInHierarchy)
             {
+                projectile.charge = charge;
                 projectile.gameObject.SetActive(true);
                 projectile.transform.position = position;
-                projectile.transform.localScale *= scaleMultiplier;
+                projectile.transform.localScale *= charge + 1.0f;
 
                 projectile.Fire(speed, direction);
                 break;
@@ -35,7 +36,7 @@ public class ProjectileManager : MonoBehaviour
 
     public void ReleaseEnemyProjectile(float speed, Vector2 position, Vector2 direction)
     {
-        foreach (Projectile projectile in enemyProjectiles)
+        foreach (EnemyProjectile projectile in enemyProjectiles)
         {
             if (!projectile.gameObject.activeInHierarchy)
             {

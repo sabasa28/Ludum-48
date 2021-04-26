@@ -188,9 +188,9 @@ GameObject:
   m_Component:
   - component: {fileID: 130729868}
   - component: {fileID: 130729867}
-  - component: {fileID: 130729866}
   - component: {fileID: 130729865}
   - component: {fileID: 130729869}
+  - component: {fileID: 130729866}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -236,14 +236,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100b4159e1b03454fa80cf454a026cc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lives: 3
+  invincibilityDuration: 3
   speedX: 10
-  projectileSpeed: 15
-  chargingSpeed: 3
   drag: 0.9
   jumpBaseForce: 600
   jumpForcePerChargeLvl: 250
   pushWhenHurtForce: 500
   startsGrounded: 0
+  projectileSpeed: 15
+  chargingSpeed: 3
 --- !u!212 &130729867
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -302,7 +304,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130729864}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.39, y: -0.33, z: 0}
+  m_LocalPosition: {x: -4, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1127,7 +1129,7 @@ PrefabInstance:
     - target: {fileID: 1679266235365659479, guid: 99116ae441e9a1e488ed9b2792f56f5b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1679266235365659479, guid: 99116ae441e9a1e488ed9b2792f56f5b,
         type: 3}
@@ -1711,7 +1713,7 @@ PrefabInstance:
     - target: {fileID: 4667879186130307026, guid: 676f32699c7c8c14cbd8c7e336cca89a,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4667879186130307026, guid: 676f32699c7c8c14cbd8c7e336cca89a,
         type: 3}
@@ -1776,6 +1778,11 @@ PrefabInstance:
     - target: {fileID: 4667879186130307031, guid: 676f32699c7c8c14cbd8c7e336cca89a,
         type: 3}
       propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908255990672568462, guid: 676f32699c7c8c14cbd8c7e336cca89a,
+        type: 3}
+      propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

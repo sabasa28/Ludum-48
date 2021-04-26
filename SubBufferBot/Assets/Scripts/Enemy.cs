@@ -5,7 +5,11 @@ public abstract class Enemy : MonoBehaviour
 {
     protected bool attackReady = true;
 
+    [SerializeField] int level = 1;
+
     [SerializeField] protected float movementSpeed = 1.0f;
+
+    [Header("Attack: ")]
     [SerializeField] protected float range = 5.0f;
     [SerializeField] protected float attackCoolDown = 2.0f;
 
@@ -28,6 +32,11 @@ public abstract class Enemy : MonoBehaviour
     protected Vector2 GetPlayerDirection()
     {
         return playerTransform.position.x > transform.position.x ? Vector2.right : -Vector2.right;
+    }
+
+    public void TakeDamage(int attackCharge)
+    {
+        if (attackCharge >= level) Destroy(gameObject);
     }
 
     protected IEnumerator CoolDown()

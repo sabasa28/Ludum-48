@@ -2,14 +2,15 @@
 
 public class PlayerProjectile : Projectile
 {
+    public int charge;
+
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
 
         if (collision.CompareTag("Enemy"))
         {
-            Debug.Log("enemy damaged");
-
+            collision.GetComponent<Enemy>().TakeDamage(charge);
             ReturnToPool();
         }
     }
