@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator anim;
+    AudioManager audioManager;
 
     [Header("Health: ")]
     [SerializeField] int lives = 3;
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        audioManager = AudioManager.Get();
 
         EnemyProjectile.OnPlayerDamaged += TakeDamage;
         ChargedAttack.OnPlayerDamaged += TakeDamage;
@@ -117,7 +119,11 @@ public class Player : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         anim.SetBool("OnAir", false);
-        if (collision.gameObject.CompareTag("Floor")) isGrounded = true;
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            isGrounded = true;
+            audioManager.PlaySound(AudioManager.Sounds.MetalImpact);
+        }
     }
 
     void OnCollisionExit2D(Collision2D collision)
@@ -187,6 +193,8 @@ public class Player : MonoBehaviour
         OnShoot?.Invoke(lastShotCharge, projectileSpeed, transform.position, shotDirection);
 
         if (dirY == -1.0f) SoundJump(shotDirection);
+
+        audioManager.PlaySoundWave(lastShotCharge);
     }
 
     void SoundJump(Vector3 soundDir) //si no hay salto diagonal se puede sacar este parametro
@@ -211,7 +219,7 @@ public class Player : MonoBehaviour
                         if (lastShotCharge > 0) lastShotCharge--;
                     }
                 }
-                else TakeDamage(collision.transform.position.x);
+                else if (!collision.GetComponent<Enemy>().dead) TakeDamage(collision.transform.position.x);
             }
         }
     }
@@ -250,10 +258,17 @@ public class Player : MonoBehaviour
         isCharging = true;
         anim.SetBool("Charging", true);
         float load = 0.0f;
+        int nextLoad = 0;
 
         while (!Input.GetButtonUp("Fire"))
         {
             load += Time.deltaTime * chargingSpeed;
+            if (nextLoad <= 3 && load >= nextLoad)
+            {
+                audioManager.PlaySound(AudioManager.Sounds.Charge);
+                nextLoad++;
+            }
+
             yield return null;
         }
 

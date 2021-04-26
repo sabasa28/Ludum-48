@@ -69,8 +69,8 @@ GameObject:
   - component: {fileID: 4967097453052400606}
   - component: {fileID: 4967097453052400601}
   - component: {fileID: 4967097453052400607}
-  - component: {fileID: 4967097453052400605}
   - component: {fileID: 3102149782007638832}
+  - component: {fileID: 4967097453052400605}
   m_Layer: 0
   m_Name: Basic Enemy
   m_TagString: Enemy
@@ -191,25 +191,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4967097453052400605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4967097453052400600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019f38413988003429e3dacd67f48578, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  raycastReceiver: {fileID: 2513928846259077877}
-  level: 1
-  movementSpeed: 1.5
-  minDistToPlayerToFlip: 0.5
-  range: 5
-  attackCoolDown: 2
-  playerTransform: {fileID: 0}
 --- !u!95 &3102149782007638832
 Animator:
   serializedVersion: 3
@@ -229,3 +210,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4967097453052400605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4967097453052400600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019f38413988003429e3dacd67f48578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastReceiver: {fileID: 2513928846259077877}
+  level: 1
+  movementSpeed: 1.5
+  minDistToPlayerToFlip: 0.5
+  range: 5
+  attackCoolDown: 2
+  playerTransform: {fileID: 0}

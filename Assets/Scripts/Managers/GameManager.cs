@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SetNewLevel();
+
+        AudioManager.Get().PlayMusic(AudioManager.Songs.Gameplay);
     }
 
     void DestroyEnemy(Enemy enemy)

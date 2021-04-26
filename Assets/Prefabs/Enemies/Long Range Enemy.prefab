@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1679266235365659474}
   - component: {fileID: 1679266235365659473}
   - component: {fileID: 1679266235365659475}
-  - component: {fileID: 1679266235365659472}
   - component: {fileID: -8014390039078063188}
+  - component: {fileID: 1679266235365659472}
   m_Layer: 0
   m_Name: Long Range Enemy
   m_TagString: Enemy
@@ -133,24 +133,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1679266235365659472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1679266235365659479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c86fc5461763edd4490d71053860197a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 2
-  movementSpeed: 1
-  range: 7.5
-  attackCoolDown: 2
-  playerTransform: {fileID: 0}
-  projectileSpeed: 5
 --- !u!95 &-8014390039078063188
 Animator:
   serializedVersion: 3
@@ -170,6 +152,26 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1679266235365659472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679266235365659479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c86fc5461763edd4490d71053860197a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastReceiver: {fileID: 8943815385053187779}
+  level: 2
+  movementSpeed: 1
+  minDistToPlayerToFlip: 0
+  range: 7.5
+  attackCoolDown: 2
+  playerTransform: {fileID: 0}
+  projectileSpeed: 3
 --- !u!1 &3575186248389979056
 GameObject:
   m_ObjectHideFlags: 0

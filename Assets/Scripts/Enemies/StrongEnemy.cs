@@ -32,6 +32,8 @@ public class StrongEnemy : Enemy
 
     protected override void Attack()
     {
+        if (dead) return;
+
         Vector2 attackPosition = transform.position;
         attackPosition.x += attackXOffset * GetPlayerDirection().x;
         attack.transform.position = attackPosition;

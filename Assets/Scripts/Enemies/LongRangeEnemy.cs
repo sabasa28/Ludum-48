@@ -21,8 +21,11 @@ public class LongRangeEnemy : Enemy
 
     protected override void Attack()
     {
+        if (dead) return;
+
         OnShoot?.Invoke(projectileSpeed, transform.position, (playerTransform.position - transform.position).normalized);
 
+        audioManager.PlaySound(AudioManager.Sounds.EnemyProjectile);
         StartCoroutine(CoolDown());
     }
 }

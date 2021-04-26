@@ -4,13 +4,15 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    [SerializeField] protected BoxCollider2D raycastReceiver;
     protected Rigidbody2D rb;
+    protected BoxCollider2D mainColl;
+    protected AudioManager audioManager;
     Animator anim;
     SpriteRenderer sr;
-    protected BoxCollider2D mainColl;
-    [SerializeField] protected BoxCollider2D raycastReceiver;
 
     protected bool attackReady = true;
+    public bool dead = false;
 
     [SerializeField] int level = 1;
 
@@ -32,9 +34,11 @@ public abstract class Enemy : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        mainColl = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
-        mainColl = GetComponent<BoxCollider2D>();
+
+        audioManager = AudioManager.Get();
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
@@ -80,6 +84,9 @@ public abstract class Enemy : MonoBehaviour
 
     protected void WaitForAnimation()
     {
+        audioManager.PlaySound(AudioManager.Sounds.EnemyDeath);
+
+        dead = true;
         mainColl.enabled = false;
         raycastReceiver.enabled = false;
         animatingDeath = true;
