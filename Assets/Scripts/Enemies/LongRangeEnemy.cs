@@ -7,6 +7,11 @@ public class LongRangeEnemy : Enemy
 
     public static event Action<float, Vector2, Vector2> OnShoot;
 
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        base.OnTriggerEnter2D(collision);
+    }
+
     void Update()
     {
         MoveTowardsPlayer();
@@ -16,7 +21,7 @@ public class LongRangeEnemy : Enemy
 
     protected override void Attack()
     {
-        OnShoot?.Invoke(projectileSpeed, transform.position, GetPlayerDirection());
+        OnShoot?.Invoke(projectileSpeed, transform.position, (playerTransform.position - transform.position).normalized);
 
         StartCoroutine(CoolDown());
     }

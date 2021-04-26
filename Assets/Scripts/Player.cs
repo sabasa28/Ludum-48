@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public int Lives { private set { lives = value; } get { return lives; } }
 
     [SerializeField] float invincibilityDuration = 3.0f;
-    bool invincible = false;
+    [SerializeField] bool invincible = false;
     bool exitedInvisibilityFrames = false;
 
     [Header("Movement: ")]
@@ -97,7 +97,7 @@ public class Player : MonoBehaviour
         if (exitedInvisibilityFrames)
         {
             CheckCollisionWithEnemy(collision);
-
+    
             exitedInvisibilityFrames = false;
         }
     }
@@ -176,11 +176,14 @@ public class Player : MonoBehaviour
         {
             if (!onHurtAnim)
             {
-                if (aboveEnemy && rb.velocity.y < 0)
+                if (aboveEnemy)
                 {
-                    rb.velocity = Vector2.zero;
-                    SoundJump(-transform.up);
-                    if (lastShotCharge > 0) lastShotCharge--;
+                    if (rb.velocity.y < 0)
+                    {
+                        rb.velocity = Vector2.zero;
+                        SoundJump(-transform.up);
+                        if (lastShotCharge > 0) lastShotCharge--;
+                    }
                 }
                 else TakeDamage(collision.transform.position.x);
             }

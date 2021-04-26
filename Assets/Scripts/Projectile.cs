@@ -16,7 +16,7 @@ public class Projectile : MonoBehaviour
         if (collision.CompareTag("Wall") || collision.CompareTag("Floor")) ReturnToPool();
     }
 
-    protected void ReturnToPool()
+    protected virtual void ReturnToPool()
     {
         transform.parent = daddy;
         transform.localPosition = Vector2.zero;

@@ -18,6 +18,11 @@ public class StrongEnemy : Enemy
         attackXOffset = Mathf.Abs(attack.transform.localPosition.x);
     }
 
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        base.OnTriggerEnter2D(collision);
+    }
+
     void Update()
     {
         if (!chargingAttack) MoveTowardsPlayer();

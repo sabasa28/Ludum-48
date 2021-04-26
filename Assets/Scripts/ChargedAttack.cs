@@ -25,7 +25,7 @@ public class ChargedAttack : MonoBehaviour
     {
         charged = true;
 
-        StartCoroutine(AttackDurationTimer());
+        if (gameObject.activeInHierarchy) StartCoroutine(AttackDurationTimer());
     }
 
     IEnumerator AttackDurationTimer()
