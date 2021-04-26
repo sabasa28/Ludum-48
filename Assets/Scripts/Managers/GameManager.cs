@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         playerTransform.position = playerInitialPosition;
 
         enemies = new List<Enemy>();
-        //StartCoroutine(SpawnEnemies());
+        StartCoroutine(SpawnEnemies());
     }
 
     void EndLevel()

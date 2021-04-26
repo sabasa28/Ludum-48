@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
     SpriteRenderer sr;
+    Animator anim;
 
     [Header("Health: ")]
     [SerializeField] int lives = 3;
@@ -29,6 +30,8 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpForcePerChargeLvl;
     [SerializeField] float pushWhenHurtForce;
 
+    [SerializeField] float bounceRaycastLength;
+
     [SerializeField] bool startsGrounded;
     bool isGrounded = false;
 
@@ -43,12 +46,15 @@ public class Player : MonoBehaviour
     int lastShotCharge;
     bool isCharging = false;
 
+    float colliderWidth;
+
     public static event Action<int, float, Vector2, Vector2> OnShoot;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
 
         EnemyProjectile.OnPlayerDamaged += TakeDamage;
         ChargedAttack.OnPlayerDamaged += TakeDamage;
@@ -59,6 +65,7 @@ public class Player : MonoBehaviour
         lookingRight = true;
         lookingUp = true;
         isGrounded = startsGrounded;
+        colliderWidth = GetComponent<BoxCollider2D>().size.x;
     }
 
     void FixedUpdate()
@@ -69,7 +76,11 @@ public class Player : MonoBehaviour
         {
             if (frameSkipped)
             {
-                if (rb.velocity == Vector2.zero) onHurtAnim = false;
+                if (rb.velocity == Vector2.zero)
+                {
+                    onHurtAnim = false;
+                    anim.SetBool("Hurt", false);
+                }
                 frameSkipped = false;
             }
             else
@@ -78,6 +89,7 @@ public class Player : MonoBehaviour
         else if (!isCharging)
         {
             rb.velocity = new Vector2(movement.x + extraHorizontalPhysics, rb.velocity.y);
+            anim.SetFloat("WalkSpeed", Mathf.Abs(movement.x / speedX));
         }
         else
         {
@@ -104,6 +116,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        anim.SetBool("OnAir", false);
         if (collision.gameObject.CompareTag("Floor")) isGrounded = true;
     }
 
@@ -117,18 +130,29 @@ public class Player : MonoBehaviour
         movement = Vector2.zero;
         movement.x = (Input.GetAxis("Horizontal")) * speedX;
 
-        if (Input.GetAxis("Vertical") >= 0) lookingUp = true;
-        else lookingUp = false;
+        if (Input.GetAxis("Vertical") >= 0)
+        {
+            lookingUp = true;
+            anim.SetBool("LookingDown", false);
+        }
+        else
+        {
+            lookingUp = false;
+            anim.SetBool("LookingDown", true);
+        }
 
         if (Input.GetButton("Fire") && !isCharging && isGrounded) StartCoroutine(LoadShot());
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -transform.up, 10, LayerMask.GetMask("Raycast"));
-        if (hit.collider != null) aboveEnemy = true;
+        RaycastHit2D hit1 = Physics2D.Raycast(new Vector2 (transform.position.x + colliderWidth/2, transform.position.y), -transform.up, bounceRaycastLength, LayerMask.GetMask("Raycast"));
+        RaycastHit2D hit2 = Physics2D.Raycast(new Vector2 (transform.position.x - colliderWidth/2, transform.position.y), -transform.up, bounceRaycastLength, LayerMask.GetMask("Raycast"));
+        
+        if (hit1.collider != null || hit2.collider != null) aboveEnemy = true;
         else aboveEnemy = false;
     }
 
     void FlipIfNeeded()
     {
+        if (onHurtAnim) return;
         if (movement.x > 0)
         {
             if (!lookingRight)
@@ -168,6 +192,7 @@ public class Player : MonoBehaviour
     void SoundJump(Vector3 soundDir) //si no hay salto diagonal se puede sacar este parametro
     {
         rb.AddForce(-soundDir * (jumpBaseForce + (lastShotCharge * jumpForcePerChargeLvl)));
+        anim.SetBool("OnAir", true);
     }
 
     void CheckCollisionWithEnemy(Collider2D collision)
@@ -200,9 +225,20 @@ public class Player : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.AddForce(dir * pushWhenHurtForce);
         onHurtAnim = true;
-
+        anim.SetBool("Hurt", true);
         Lives--;
         StartCoroutine(InvincibilityFrames());
+
+        if (dirX < 0.0f)
+        {
+            sr.flipX = false;
+            lookingRight = true;
+        }
+        else
+        {
+            sr.flipX = true;
+            lookingRight = false;
+        }
 
         Debug.Log("player damaged, lives: " + Lives);
         if (Lives == 0) Debug.Log("player DIED");
@@ -211,6 +247,7 @@ public class Player : MonoBehaviour
     IEnumerator LoadShot()
     {
         isCharging = true;
+        anim.SetBool("Charging", true);
         float load = 0.0f;
 
         while (!Input.GetButtonUp("Fire"))
@@ -222,6 +259,7 @@ public class Player : MonoBehaviour
         if (load > 3.0f) load = 3.0f;
         lastShotCharge = (int)load;
         isCharging = false;
+        anim.SetBool("Charging", false);
         Shoot();
     }
 
