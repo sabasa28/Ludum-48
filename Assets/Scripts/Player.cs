@@ -270,8 +270,7 @@ public class Player : MonoBehaviour
         livesDisplayer.UpdateLives(lives);
         StartCoroutine(InvincibilityFrames());
 
-        Debug.Log("player damaged, lives: " + lives);
-        if (lives == 0) OnDeath?.Invoke();
+        if (lives <= 0) OnDeath?.Invoke();
     }
 
     void TakeDamage(float collisionX, Enemy.Enemies enemyKind)
