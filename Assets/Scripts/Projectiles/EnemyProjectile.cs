@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EnemyProjectile : Projectile
 {
-    public static event Action<float> OnPlayerDamaged;
+    public static event Action<float, Enemy.Enemies> OnPlayerDamaged;
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
@@ -11,7 +11,7 @@ public class EnemyProjectile : Projectile
 
         if (collision.CompareTag("Player"))
         {
-            OnPlayerDamaged?.Invoke(transform.position.x);
+            OnPlayerDamaged?.Invoke(transform.position.x, Enemy.Enemies.LongRange);
             ReturnToPool();
         }
     }

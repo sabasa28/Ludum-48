@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        player.lives = initialPlayerLives;
+        player.SetLives(initialPlayerLives);
         player.transform.position = playerInitialPosition;
 
         StartCoroutine(SpawnEnemies());

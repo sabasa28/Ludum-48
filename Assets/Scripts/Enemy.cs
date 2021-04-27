@@ -4,6 +4,15 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    public enum Enemies
+    {
+        Default,
+        Basic,
+        LongRange,
+        Strong
+    }
+    public Enemies enemyKind = Enemies.Default;
+
     [SerializeField] protected BoxCollider2D raycastReceiver;
     protected Rigidbody2D rb;
     protected BoxCollider2D mainColl;
@@ -60,7 +69,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected void MoveTowardsPlayer()
     {
-        if (animatingDeath) return;
+        if (animatingDeath || !grounded) return;
         Vector2 position = transform.position;
         Vector2 playerDir = GetPlayerDirection();
         position += playerDir * movementSpeed * Time.deltaTime;

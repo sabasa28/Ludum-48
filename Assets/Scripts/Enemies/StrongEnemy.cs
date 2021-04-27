@@ -16,6 +16,8 @@ public class StrongEnemy : Enemy
     protected override void Awake()
     {
         base.Awake();
+
+        enemyKind = Enemies.Strong;
         attackXOffset = Mathf.Abs(attack.transform.localPosition.x);
     }
 

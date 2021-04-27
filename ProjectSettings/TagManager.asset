@@ -49,10 +49,7 @@ TagManager:
   - name: Background
     uniqueID: 4294849323
     locked: 0
-  - name: Background Cover
-    uniqueID: 2614387793
-    locked: 0
-  - name: Terrain
+  - name: Platform
     uniqueID: 1565883645
     locked: 0
   - name: Enemy

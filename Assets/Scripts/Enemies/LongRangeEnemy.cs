@@ -7,6 +7,13 @@ public class LongRangeEnemy : Enemy
 
     public static event Action<float, Vector2, Vector2> OnShoot;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        enemyKind = Enemies.LongRange;
+    }
+
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);

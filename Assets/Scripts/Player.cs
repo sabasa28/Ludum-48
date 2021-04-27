@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     bool exitedInvisibilityFrames = false;
     [HideInInspector] public bool invincible = false;
 
+    [SerializeField] Lives livesDisplayer;
+
     [Header("Movement: ")]
     [SerializeField] float speedX = 0.0f;
     Vector2 movement;
@@ -45,6 +47,8 @@ public class Player : MonoBehaviour
     [SerializeField] float chargingSpeed = 1.0f;
     int lastShotCharge;
     bool isCharging = false;
+
+    [SerializeField] ChargeBar chargeBar;
 
     float colliderWidth;
 
@@ -127,6 +131,8 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform"))
         {
             isGrounded = true;
+
+            chargeBar.ResetCharge();
             audioManager.PlaySound(AudioManager.Sounds.MetalImpact);
         }
     }
@@ -203,9 +209,14 @@ public class Player : MonoBehaviour
         Vector2 shotDirection = new Vector2(dirX, dirY).normalized;
         OnShoot?.Invoke(lastShotCharge, projectileSpeed, transform.position, shotDirection);
 
-        if (dirY == -1.0f) SoundJump(shotDirection);
-
         audioManager.PlaySoundWave(lastShotCharge);
+
+        if (dirY == -1.0f) SoundJump(shotDirection);
+        else
+        {
+            lastShotCharge = 0;
+            chargeBar.ResetCharge();
+        }
     }
 
     void SoundJump(Vector3 soundDir) //si no hay salto diagonal se puede sacar este parametro
@@ -227,10 +238,19 @@ public class Player : MonoBehaviour
                         rb.velocity = Vector2.zero;
                         SoundJump(-transform.up);
                         collision.GetComponent<Enemy>().Squished(lastShotCharge);
-                        if (lastShotCharge > 0) lastShotCharge--;
+                        if (lastShotCharge > 0)
+                        {
+                            lastShotCharge--;
+                            chargeBar.SetCharge(lastShotCharge + 1);
+                        }
+                        else chargeBar.ResetCharge();
                     }
                 }
-                else if (!collision.GetComponent<Enemy>().dead) TakeDamage(collision.transform.position.x);
+                else
+                {
+                    Enemy enemy = collision.GetComponent<Enemy>();
+                    if (!enemy.dead) TakeDamage(collision.transform.position.x, enemy.enemyKind);
+                }
             }
         }
     }
@@ -239,21 +259,22 @@ public class Player : MonoBehaviour
     {
         transform.position = Vector2.zero;
 
-        TakeDamage();
+        TakeDamage(1);
     }
 
-    void TakeDamage()
+    void TakeDamage(int damage)
     {
         if (invincible) return;
 
-        lives--;
+        lives -= damage;
+        livesDisplayer.UpdateLives(lives);
         StartCoroutine(InvincibilityFrames());
 
         Debug.Log("player damaged, lives: " + lives);
         if (lives == 0) OnDeath?.Invoke();
     }
 
-    void TakeDamage(float collisionX)
+    void TakeDamage(float collisionX, Enemy.Enemies enemyKind)
     {
         if (invincible) return;
 
@@ -276,7 +297,14 @@ public class Player : MonoBehaviour
             lookingRight = false;
         }
 
-        TakeDamage();
+        int damage = enemyKind == Enemy.Enemies.Strong ? 2 : 1;
+        TakeDamage(damage);
+    }
+
+    public void SetLives(int newLives)
+    {
+        lives = newLives;
+        livesDisplayer.UpdateLives(lives);
     }
 
     IEnumerator LoadShot()
@@ -291,7 +319,9 @@ public class Player : MonoBehaviour
             load += Time.deltaTime * chargingSpeed;
             if (nextLoad <= 3 && load >= nextLoad)
             {
+                chargeBar.SetCharge((int)load + 1);
                 audioManager.PlaySound(AudioManager.Sounds.Charge);
+
                 nextLoad++;
             }
 
