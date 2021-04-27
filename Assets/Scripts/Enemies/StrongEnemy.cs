@@ -13,8 +13,9 @@ public class StrongEnemy : Enemy
     [SerializeField] ChargedAttack attack;
     [SerializeField] SpriteRenderer attackSR;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         attackXOffset = Mathf.Abs(attack.transform.localPosition.x);
     }
 
@@ -33,7 +34,6 @@ public class StrongEnemy : Enemy
     protected override void Attack()
     {
         if (dead) return;
-
         Vector2 attackPosition = transform.position;
         attackPosition.x += attackXOffset * GetPlayerDirection().x;
         attack.transform.position = attackPosition;
@@ -47,23 +47,21 @@ public class StrongEnemy : Enemy
         float timer = 0.0f;
 
         chargingAttack = true;
-
-        Color attackColor = attackSR.color;
-        attackColor.a = 0.0f;
-        attackSR.color = attackColor;
-
+        bool startedAnimating = false;
         while (timer < attackChargeDuration)
         {
-            attackColor.a += Time.deltaTime / attackChargeDuration;
-            attackSR.color = attackColor;
+            if (!startedAnimating&& timer<attackChargeDuration/3)
+            {
+                anim.SetTrigger("Attacking");
+                startedAnimating = true;
+            }
 
             timer += Time.deltaTime;
             yield return null;
         }
-
         chargingAttack = false;
-
         attack.OnCharged();
+
         StartCoroutine(CoolDown());
     }
 }

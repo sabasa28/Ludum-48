@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(minEnemySpawnInterval, maxEnemySpawnInterval));
 
             Vector2 position = new Vector2(Random.Range(minEnemySpawnX, maxEnemySpawnX), enemySpawnY);
-            GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length - 1)];
+            GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
 
             Enemy enemy = Instantiate(prefab, position, Quaternion.identity, enemyContainer).GetComponent<Enemy>();
             enemy.playerTransform = playerTransform;

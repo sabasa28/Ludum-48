@@ -122,6 +122,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Floor"))
         {
             isGrounded = true;
+            if (audioManager == null) Debug.Log("NO TA EL AUDIOMANAGER");
             audioManager.PlaySound(AudioManager.Sounds.MetalImpact);
         }
     }

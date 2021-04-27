@@ -14,6 +14,7 @@ public class LongRangeEnemy : Enemy
 
     void Update()
     {
+
         MoveTowardsPlayer();
 
         if (PlayerInRange() && attackReady) Attack();
@@ -24,7 +25,7 @@ public class LongRangeEnemy : Enemy
         if (dead) return;
 
         OnShoot?.Invoke(projectileSpeed, transform.position, (playerTransform.position - transform.position).normalized);
-
+        anim.SetTrigger("Attacking");
         audioManager.PlaySound(AudioManager.Sounds.EnemyProjectile);
         StartCoroutine(CoolDown());
     }

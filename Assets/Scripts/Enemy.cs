@@ -8,7 +8,7 @@ public abstract class Enemy : MonoBehaviour
     protected Rigidbody2D rb;
     protected BoxCollider2D mainColl;
     protected AudioManager audioManager;
-    Animator anim;
+    protected Animator anim;
     SpriteRenderer sr;
 
     protected bool attackReady = true;
@@ -17,7 +17,7 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] int level = 1;
 
     [SerializeField] protected float movementSpeed = 1.0f;
-    float positionY = -1.61f;
+    [SerializeField] float positionY = -1.61f;
     bool grounded = false;
 
     bool animatingDeath = false;
@@ -31,7 +31,7 @@ public abstract class Enemy : MonoBehaviour
 
     public static event Action<Enemy> OnDeath;
 
-    void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         mainColl = GetComponent<BoxCollider2D>();
@@ -69,6 +69,11 @@ public abstract class Enemy : MonoBehaviour
         {
             if (playerDir.x > 0 && sr.flipX) sr.flipX = false;
             else if (playerDir.x < 0 && !sr.flipX) sr.flipX = true;
+
+            if (sr == null) Debug.Log("sr");
+            if (rb == null) Debug.Log("sr");
+            if (mainColl == null) Debug.Log("sr");
+            if (sr == null) Debug.Log("sr");
         }
     }
 
