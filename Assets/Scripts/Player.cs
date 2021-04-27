@@ -5,17 +5,16 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
-    SpriteRenderer sr;
     Animator anim;
     AudioManager audioManager;
+    [HideInInspector] public SpriteRenderer sr;
 
     [Header("Health: ")]
-    [SerializeField] int lives = 3;
-    public int Lives { private set { lives = value; } get { return lives; } }
+    public int lives;
 
     [SerializeField] float invincibilityDuration = 3.0f;
-    [SerializeField] bool invincible = false;
     bool exitedInvisibilityFrames = false;
+    [HideInInspector] public bool invincible = false;
 
     [Header("Movement: ")]
     [SerializeField] float speedX = 0.0f;
@@ -58,7 +57,10 @@ public class Player : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         audioManager = AudioManager.Get();
+    }
 
+    void OnEnable()
+    {
         EnemyProjectile.OnPlayerDamaged += TakeDamage;
         ChargedAttack.OnPlayerDamaged += TakeDamage;
     }
@@ -159,6 +161,12 @@ public class Player : MonoBehaviour
         else aboveEnemy = false;
     }
 
+    void OnDisable()
+    {
+        EnemyProjectile.OnPlayerDamaged -= TakeDamage;
+        ChargedAttack.OnPlayerDamaged -= TakeDamage;
+    }
+
     void FlipIfNeeded()
     {
         if (onHurtAnim) return;
@@ -229,18 +237,20 @@ public class Player : MonoBehaviour
 
     void OnFallenIntoVoid()
     {
-        TakeDamage();
-
         transform.position = Vector2.zero;
+
+        TakeDamage();
     }
 
     void TakeDamage()
     {
-        Lives--;
+        if (invincible) return;
+
+        lives--;
         StartCoroutine(InvincibilityFrames());
 
-        Debug.Log("player damaged, lives: " + Lives);
-        if (Lives == 0) OnDeath?.Invoke();
+        Debug.Log("player damaged, lives: " + lives);
+        if (lives == 0) OnDeath?.Invoke();
     }
 
     void TakeDamage(float collisionX)

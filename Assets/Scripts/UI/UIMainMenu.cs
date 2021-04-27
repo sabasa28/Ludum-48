@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIMainMenu : MonoBehaviour
 {
-    [SerializeField] GameObject credits;
-    [SerializeField] GameObject controls;
-
+    [SerializeField] Image controls;
+    [SerializeField] Sprite[] controlSprite;
+    int currentControlSprite = 0;
     AudioManager audioManager;
 
     void Awake()
@@ -27,15 +28,40 @@ public class UIMainMenu : MonoBehaviour
     public void ShowControls()
     {
         audioManager.PlaySound(AudioManager.Sounds.Button);
-        controls.SetActive(true);
+        controls.gameObject.SetActive(true);
     }
 
     public void HideControls()
     {
         audioManager.PlaySound(AudioManager.Sounds.Button);
-        controls.SetActive(false);
+        controls.gameObject.SetActive(false);
     }
 
+    public void NextControlSprite()
+    {
+        currentControlSprite++;
+        ChangeControlSprite();
+    }
+
+    public void LastControlSprite()
+    {
+        currentControlSprite--;
+        ChangeControlSprite();
+    }
+
+    void ChangeControlSprite()
+    {
+        if (currentControlSprite > controlSprite.Length - 1 || currentControlSprite < 0)
+        {
+            currentControlSprite = 0;
+            ChangeControlSprite();
+            HideControls();
+        }
+        else
+        {
+            controls.sprite = controlSprite[currentControlSprite];
+        }
+    }
     public void ExitGame()
     {
         audioManager.PlaySound(AudioManager.Sounds.Button);

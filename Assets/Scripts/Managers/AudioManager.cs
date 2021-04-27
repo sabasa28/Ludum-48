@@ -38,36 +38,6 @@ public class AudioManager : MonoBehaviourSingleton<AudioManager>
         soundWaveAudioSource.clip = soundWaveClip;
     }
 
-    //void OnEnable()
-    //{
-    //    SceneManager.sceneLoaded += PlayMusicOnNewScene;
-    //}
-    //
-    //void OnDisable()
-    //{
-    //    SceneManager.sceneLoaded -= PlayMusicOnNewScene;
-    //}
-    //
-    //void PlayMusicOnNewScene(Scene scene, LoadSceneMode mode)
-    //{
-    //    Songs song;
-    //
-    //    switch (scene.name)
-    //    {
-    //        case "Main Menu":
-    //            song = Songs.MainMenu;
-    //            break;
-    //        case "Gameplay":
-    //            song = Songs.Gameplay;
-    //            break;
-    //        default:
-    //            song = 0;
-    //            break;
-    //    }
-    //
-    //    PlayMusic(song);
-    //}
-
     public void PlaySoundWave(int charge)
     {
         if (!soundOn) return;

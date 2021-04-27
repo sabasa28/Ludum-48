@@ -2,19 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Background: ")]
-    [SerializeField] float baseBGCoverAlphaAddition = 0.1f;
+    [SerializeField] float baseBGCoverAlphaAddition = 0.2f;
+    [SerializeField] Sprite background1;
     [SerializeField] Sprite background2;
     [SerializeField] SpriteRenderer backgroundSR;
     [SerializeField] SpriteRenderer backgroundCoverSR;
     [SerializeField] Cover levelCover;
 
     [Header("Player: ")]
+    [SerializeField] int initialPlayerLives = 3;
     [SerializeField] Vector2 playerInitialPosition = Vector2.zero;
-    [SerializeField] Transform playerTransform = null;
+    [SerializeField] Player player = null;
 
     [Header("Enemies: ")]
     [SerializeField] float minEnemySpawnInterval;
@@ -28,19 +31,25 @@ public class GameManager : MonoBehaviour
     int enemyAmount;
 
     [SerializeField] GameObject[] enemyPrefabs = null;
-    List<Enemy> enemies;
+    List<Enemy> enemies = new List<Enemy>();
 
     int level = 1;
 
     public static event Action OnDefeat;
+    public static event Action OnVictory;
 
     void Awake()
     {
+        Time.timeScale = 1.0f;
         enemyAmount = baseEnemyAmount;
+    }
 
+    void OnEnable()
+    {
         Player.OnDeath += Lose;
         Enemy.OnDeath += DestroyEnemy;
         Cover.OnFadedToBlack += SetNewLevel;
+        UIManager_Gameplay.OnGameReset += ResetGame;
     }
 
     void Start()
@@ -48,6 +57,14 @@ public class GameManager : MonoBehaviour
         SetNewLevel();
 
         AudioManager.Get().PlayMusic(AudioManager.Songs.Gameplay);
+    }
+
+    void OnDisable()
+    {
+        Player.OnDeath -= Lose;
+        Enemy.OnDeath -= DestroyEnemy;
+        Cover.OnFadedToBlack -= SetNewLevel;
+        UIManager_Gameplay.OnGameReset -= ResetGame;
     }
 
     void DestroyEnemy(Enemy enemy)
@@ -72,23 +89,42 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        playerTransform.position = playerInitialPosition;
+        player.lives = initialPlayerLives;
+        player.transform.position = playerInitialPosition;
 
-        enemies = new List<Enemy>();
         StartCoroutine(SpawnEnemies());
     }
 
     void EndLevel()
     {
+        if (backgroundCoverSR.color.a == 1.0f) Win();
+
         level++;
         enemyAmount++;
 
         levelCover.FadeToBlack();
     }
 
+    void ResetGame()
+    {
+        SceneManager.LoadScene("Gameplay");
+    }
+
     void Lose()
     {
+        Time.timeScale = 0.0f;
+        player.gameObject.SetActive(false);
 
+        StopCoroutine(SpawnEnemies());
+
+        OnDefeat?.Invoke();
+    }
+
+    void Win()
+    {
+        Time.timeScale = 0.0f;
+
+        OnVictory?.Invoke();
     }
 
     IEnumerator SpawnEnemies()
@@ -101,7 +137,7 @@ public class GameManager : MonoBehaviour
             GameObject prefab = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)];
 
             Enemy enemy = Instantiate(prefab, position, Quaternion.identity, enemyContainer).GetComponent<Enemy>();
-            enemy.playerTransform = playerTransform;
+            enemy.playerTransform = player.transform;
             enemies.Add(enemy);
         }
     }

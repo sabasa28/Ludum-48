@@ -12,9 +12,18 @@ public class ProjectileManager : MonoBehaviour
     {
         playerProjectiles = playerProjectileContainer.GetComponentsInChildren<PlayerProjectile>(true);
         enemyProjectiles = enemyProjectileContainer.GetComponentsInChildren<EnemyProjectile>(true);
+    }
 
+    void OnEnable()
+    {
         Player.OnShoot += ReleasePlayerProjectile;
         LongRangeEnemy.OnShoot += ReleaseEnemyProjectile;
+    }
+
+    void OnDisable()
+    {
+        Player.OnShoot -= ReleasePlayerProjectile;
+        LongRangeEnemy.OnShoot -= ReleaseEnemyProjectile;
     }
 
     public void ReleasePlayerProjectile(int charge, float speed, Vector2 position, Vector2 direction)

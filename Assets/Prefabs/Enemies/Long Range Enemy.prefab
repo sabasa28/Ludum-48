@@ -169,7 +169,7 @@ MonoBehaviour:
   level: 2
   movementSpeed: 1
   positionY: -1.88
-  minDistToPlayerToFlip: 0
+  minDistToPlayerToFlip: 0.5
   range: 7.5
   attackCoolDown: 2
   playerTransform: {fileID: 0}
