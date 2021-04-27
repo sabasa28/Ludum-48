@@ -31,6 +31,7 @@ public class ChargedAttack : MonoBehaviour
     IEnumerator AttackDurationTimer()
     {
         yield return new WaitForSeconds(duration);
+
         charged = false;
         gameObject.SetActive(false);
     }

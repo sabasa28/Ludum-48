@@ -130,7 +130,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1304673883
-  m_SortingLayer: 1
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 4723107735738678597, guid: de33b4a5a620e9342af8bae92754776a,
     type: 3}
@@ -223,8 +223,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raycastReceiver: {fileID: 2513928846259077877}
+  dead: 0
   level: 1
   movementSpeed: 1.5
+  positionY: -2.03
   minDistToPlayerToFlip: 0.5
   range: 5
   attackCoolDown: 2

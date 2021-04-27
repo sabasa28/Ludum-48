@@ -6,7 +6,9 @@ TagManager:
   tags:
   - Wall
   - Enemy
-  - Floor
+  - Edge Collider
+  - Platform
+  - Void
   layers:
   - Default
   - TransparentFX
@@ -44,6 +46,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 4294849323
+    locked: 0
+  - name: Background Cover
+    uniqueID: 2614387793
+    locked: 0
+  - name: Terrain
+    uniqueID: 1565883645
+    locked: 0
   - name: Enemy
     uniqueID: 2990293413
     locked: 0
@@ -52,4 +63,7 @@ TagManager:
     locked: 0
   - name: Attack
     uniqueID: 3787752507
+    locked: 0
+  - name: Cover
+    uniqueID: 811197733
     locked: 0

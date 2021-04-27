@@ -1,35 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class UIMainMenu : MonoBehaviour
 {
-    public GameObject credits;
-    public GameObject controls;
+    [SerializeField] GameObject credits;
+    [SerializeField] GameObject controls;
+
+    AudioManager audioManager;
+
+    void Awake()
+    {
+        audioManager = AudioManager.Get();
+    }
+
+    void Start()
+    {
+        audioManager.PlayMusic(AudioManager.Songs.MainMenu);
+    }
+
     public void LoadGameplay()
     {
-        SceneManager.LoadScene(1);
+        audioManager.PlaySound(AudioManager.Sounds.Button);
+        SceneManager.LoadScene("Gameplay");
     }
-    public void ExitGame()
-    {
-        Application.Quit();
-        Debug.Log("Game Closed");
-    }
-    public void ShowCredits()
-    {
-        credits.SetActive(true);
-    }
-    public void HideCredits()
-    { 
-        credits.SetActive(false);
-    }
+
     public void ShowControls()
     {
+        audioManager.PlaySound(AudioManager.Sounds.Button);
         controls.SetActive(true);
     }
+
     public void HideControls()
     {
+        audioManager.PlaySound(AudioManager.Sounds.Button);
         controls.SetActive(false);
+    }
+
+    public void ExitGame()
+    {
+        audioManager.PlaySound(AudioManager.Sounds.Button);
+        Application.Quit();
+        Debug.Log("Game Closed");
     }
 }

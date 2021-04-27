@@ -70,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -507214789
-  m_SortingLayer: 3
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 0, b: 0, a: 0}
@@ -197,10 +197,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1304673883
-  m_SortingLayer: 1
+  m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 4723107735738678597, guid: 24f67c4c67a569b4ab093b78e5d8193a,
-    type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -208,7 +207,7 @@ SpriteRenderer:
   m_Size: {x: 1.02, y: 1.0066667}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &4667879186130307031
@@ -293,7 +292,7 @@ MonoBehaviour:
   dead: 0
   level: 3
   movementSpeed: 0.5
-  positionY: -1.31
+  positionY: -1.73
   minDistToPlayerToFlip: 0
   range: 2
   attackCoolDown: 1.5

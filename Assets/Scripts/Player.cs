@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
     float colliderWidth;
 
     public static event Action<int, float, Vector2, Vector2> OnShoot;
+    public static event Action OnDeath;
 
     void Awake()
     {
@@ -104,6 +105,8 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!exitedInvisibilityFrames) CheckCollisionWithEnemy(collision);
+
+        if (collision.CompareTag("Void")) OnFallenIntoVoid();
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -119,17 +122,16 @@ public class Player : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         anim.SetBool("OnAir", false);
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Platform"))
         {
             isGrounded = true;
-            if (audioManager == null) Debug.Log("NO TA EL AUDIOMANAGER");
             audioManager.PlaySound(AudioManager.Sounds.MetalImpact);
         }
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Floor")) isGrounded = false;
+        if (collision.gameObject.CompareTag("Platform")) isGrounded = false;
     }
 
     void Update()
@@ -225,6 +227,22 @@ public class Player : MonoBehaviour
         }
     }
 
+    void OnFallenIntoVoid()
+    {
+        TakeDamage();
+
+        transform.position = Vector2.zero;
+    }
+
+    void TakeDamage()
+    {
+        Lives--;
+        StartCoroutine(InvincibilityFrames());
+
+        Debug.Log("player damaged, lives: " + Lives);
+        if (Lives == 0) OnDeath?.Invoke();
+    }
+
     void TakeDamage(float collisionX)
     {
         if (invincible) return;
@@ -236,8 +254,6 @@ public class Player : MonoBehaviour
         rb.AddForce(dir * pushWhenHurtForce);
         onHurtAnim = true;
         anim.SetBool("Hurt", true);
-        Lives--;
-        StartCoroutine(InvincibilityFrames());
 
         if (dirX < 0.0f)
         {
@@ -250,8 +266,7 @@ public class Player : MonoBehaviour
             lookingRight = false;
         }
 
-        Debug.Log("player damaged, lives: " + Lives);
-        if (Lives == 0) Debug.Log("player DIED");
+        TakeDamage();
     }
 
     IEnumerator LoadShot()

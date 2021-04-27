@@ -15,10 +15,10 @@ public class Projectile : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Wall") || collision.CompareTag("Floor")) ReturnToPool();
+        if (collision.CompareTag("Edge Collider")) ReturnToPool();
     }
 
-    protected virtual void ReturnToPool()
+    public virtual void ReturnToPool()
     {
         transform.parent = daddy;
         transform.localPosition = Vector2.zero;

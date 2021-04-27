@@ -43,7 +43,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!grounded && collision.CompareTag("Floor"))
+        if (!grounded && collision.CompareTag("Platform"))
         {
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0.0f;
@@ -69,11 +69,6 @@ public abstract class Enemy : MonoBehaviour
         {
             if (playerDir.x > 0 && sr.flipX) sr.flipX = false;
             else if (playerDir.x < 0 && !sr.flipX) sr.flipX = true;
-
-            if (sr == null) Debug.Log("sr");
-            if (rb == null) Debug.Log("sr");
-            if (mainColl == null) Debug.Log("sr");
-            if (sr == null) Debug.Log("sr");
         }
     }
 

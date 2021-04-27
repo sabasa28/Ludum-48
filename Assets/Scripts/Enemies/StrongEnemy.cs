@@ -50,7 +50,7 @@ public class StrongEnemy : Enemy
         bool startedAnimating = false;
         while (timer < attackChargeDuration)
         {
-            if (!startedAnimating&& timer<attackChargeDuration/3)
+            if (!startedAnimating && timer < attackChargeDuration / 3)
             {
                 anim.SetTrigger("Attacking");
                 startedAnimating = true;
